@@ -32,12 +32,11 @@ pipeline {
             steps {
 
                     sh """
-
                     docker build -t joindevops/backend:${appVersion} .
                     docker images
-
-
                     """
+
+                    
                     
 
             }
