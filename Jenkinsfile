@@ -20,10 +20,10 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
+        stage('install dependencies') {
             steps {
-                sh 'echo This is a testing'
-                sh 'env'
+                sh 'npm install'
+                
               
             }
         }
