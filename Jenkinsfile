@@ -27,12 +27,17 @@ pipeline {
               
             }
         }
-        stage('Deploy') {
+        stage('Docker build') {
           
             steps {
 
-                    sh 'echo This is a deploy'
-                    //error 'pipeline failed'
+                    sh """
+
+                    docker build -t joindevops/backend:${appVersion} .
+                    docker images
+
+
+                    """
                     
 
             }
