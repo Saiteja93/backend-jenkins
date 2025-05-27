@@ -1,56 +1,13 @@
-pipeline {
-    agent {
-        label 'agent -1'
-    }
-    options{
-        timeout(time: 10, unit: 'MINUTES')
-        disableConcurrentBuilds()
-    }
-    environment {
-        DEBUG = 'true'
-        appVersion = ''
-    }
-     stages {
-        stage('Read the version') {
-            steps {
-                script{
-                    def packageJson = readJSON file: 'package.json'
-                    appVersion = packageJson.version
-                    echo "App version: ${appVersion}"
-                }
-            }
-        }
-        stage('install dependencies') {
-            steps {
-                sh 'npm install'
-                
-              
-            }
-        }
-        stage('Docker build') {
-          
-            steps {
+@Library('jenkins-shared-library') _ // gets the global pipeline libraries in system configuration
 
-                    sh """
-                    docker build -t joindevops/backend:${appVersion} .
-                    docker images
-                    """      
+def configmap = [
+    project: "expense",
+    component: "backend"
+]
 
-            }
-        }
-    }
-    
-
-    post {
-        always {
-            echo " this section runs always"
-        }
-        success {
-            echo "this section run when pipeline sucecess"
-        }
-        failure {
-            echo "this section runs when pipeline failed"
-        }
-    }
+if( ! env.BRANCH_NAME.equalsIgnoreCase('main')){ // true, if branch is feature branch
+    nodeJSEKSPipeline(configmap)
 }
-        
+else{
+    echo "Follow the process of PROD release"
+}
